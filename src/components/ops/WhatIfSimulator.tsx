@@ -20,7 +20,11 @@ export function WhatIfSimulator() {
         body: JSON.stringify({ query })
       });
       const data = await res.json();
-      setResult(data);
+      if (data.impactedZones) {
+        setResult(data);
+      } else {
+        console.error('Simulation failed:', data);
+      }
     } catch (err) {
       console.error(err);
     } finally {

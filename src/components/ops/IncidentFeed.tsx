@@ -24,8 +24,14 @@ export function IncidentFeed() {
     try {
       const res = await fetch('/api/ops/incidents');
       const data = await res.json();
-      setIncidents(data);
-    } catch (e) { }
+      if (Array.isArray(data)) {
+        setIncidents(data);
+      } else {
+        console.error('Failed to fetch incidents:', data);
+      }
+    } catch (e) {
+      console.error('Error fetching incidents:', e);
+    }
   };
 
   useEffect(() => {

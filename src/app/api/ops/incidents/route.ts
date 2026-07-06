@@ -11,6 +11,7 @@ export async function GET() {
     });
     return NextResponse.json(incidents);
   } catch (error) {
-    return NextResponse.json({ error: 'Failed to fetch incidents' }, { status: 500 });
+    console.error('Prisma Error:', error);
+    return NextResponse.json([]);
   }
 }
