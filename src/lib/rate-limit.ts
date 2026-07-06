@@ -1,8 +1,15 @@
+/**
+ * A simple in-memory rate limiter based on sliding window.
+ */
 export class RateLimiter {
   private requests: Map<string, number[]> = new Map();
   private maxRequests: number;
   private windowMs: number;
 
+  /**
+   * @param {number} maxRequests - The maximum number of requests allowed within the window.
+   * @param {number} windowMs - The time window in milliseconds.
+   */
   constructor(maxRequests: number = 10, windowMs: number = 60000) {
     this.maxRequests = maxRequests;
     this.windowMs = windowMs;
@@ -23,6 +30,13 @@ export class RateLimiter {
     validTimestamps.push(now);
     this.requests.set(ip, validTimestamps);
     return true; // Allowed
+  }
+
+  /**
+   * Resets the rate limiter (useful for testing).
+   */
+  public reset(): void {
+    this.requests.clear();
   }
 }
 

@@ -15,6 +15,10 @@ const INITIAL_ZONES: Record<string, ZoneState> = {
 
 type Listener = (state: SimulationState, event?: SimulationEvent) => void;
 
+/**
+ * The SimulationEngine is a singleton class that manages the live state of the stadium.
+ * It simulates crowd movement, tracks active incidents, and handles manual surges.
+ */
 class SimulationEngine {
   private state: SimulationState;
   private listeners: Set<Listener> = new Set();
@@ -29,10 +33,19 @@ class SimulationEngine {
     };
   }
 
+  /**
+   * Returns the current simulation state.
+   * @returns {SimulationState} The live state of the stadium.
+   */
   public getState(): SimulationState {
     return this.state;
   }
 
+  /**
+   * Subscribes a listener to simulation state changes.
+   * @param {Listener} listener - The callback function to invoke on updates.
+   * @returns {() => void} A function to unsubscribe the listener.
+   */
   public subscribe(listener: Listener): () => void {
     this.listeners.add(listener);
     // Send immediate initial state
@@ -49,9 +62,14 @@ class SimulationEngine {
     }
   }
 
-  public start() {
+  /**
+   * Starts the simulation engine tick loop.
+   */
+  public start(): void {
     if (this.intervalId) return;
-    console.log("Simulation Engine started.");
+    if (process.env.NODE_ENV !== 'production') {
+      // console.log("Simulation Engine started.");
+    }
     
     // Tick every 5 seconds to fluctuate data
     this.intervalId = setInterval(() => {
@@ -59,7 +77,10 @@ class SimulationEngine {
     }, 5000);
   }
 
-  public stop() {
+  /**
+   * Stops the simulation engine tick loop.
+   */
+  public stop(): void {
     if (this.intervalId) {
       clearInterval(this.intervalId);
       this.intervalId = null;
@@ -104,7 +125,11 @@ class SimulationEngine {
 
   // --- Manual Triggers for Demo ---
 
-  public triggerSurge(phase: SimulationState['matchPhase']) {
+  /**
+   * Manually triggers a surge in crowd density based on the match phase.
+   * @param {SimulationState['matchPhase']} phase - The phase to trigger.
+   */
+  public triggerSurge(phase: SimulationState['matchPhase']): void {
     this.state.matchPhase = phase;
     
     if (phase === 'HALFTIME') {

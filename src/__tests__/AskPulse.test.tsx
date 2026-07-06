@@ -60,4 +60,38 @@ describe('AskPulse', () => {
     expect(global.fetch).toHaveBeenCalledTimes(1);
     expect(global.fetch).toHaveBeenCalledWith('/api/chat', expect.any(Object));
   });
+
+  it('shows error message on fetch failure', async () => {
+    (global.fetch as jest.Mock).mockRejectedValueOnce(new Error('Network Error'));
+    render(<AskPulse onRouteReceived={jest.fn()} accessibilityMode={false} setAccessibilityMode={jest.fn()} />);
+    
+    const input = screen.getByLabelText('Ask Pulse a question');
+    const sendButton = screen.getByLabelText('Send message');
+    
+    fireEvent.change(input, { target: { value: 'Where is Gate B?' } });
+    fireEvent.click(sendButton);
+
+    await waitFor(() => {
+      expect(screen.getByText('Sorry, I am having trouble connecting right now.')).toBeInTheDocument();
+    });
+  });
+
+  it('toggles accessibility mode', () => {
+    const setAcc = jest.fn();
+    render(<AskPulse onRouteReceived={jest.fn()} accessibilityMode={false} setAccessibilityMode={setAcc} />);
+    
+    const toggle = screen.getByTitle('Toggle Accessibility Routing');
+    fireEvent.click(toggle);
+    
+    expect(setAcc).toHaveBeenCalledWith(true);
+  });
+
+  it('does not submit when input is empty', () => {
+    render(<AskPulse onRouteReceived={jest.fn()} accessibilityMode={false} setAccessibilityMode={jest.fn()} />);
+    
+    const sendButton = screen.getByLabelText('Send message');
+    fireEvent.click(sendButton);
+    
+    expect(global.fetch).not.toHaveBeenCalled();
+  });
 });

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState, memo } from 'react';
-import { AlertCircle, CheckCircle2, Clock, ShieldAlert, Zap } from 'lucide-react';
+import { AlertCircle, CheckCircle2 } from 'lucide-react';
 import { cn } from '../stadium/StadiumMap';
 import type { Incident } from '@/types';
 
@@ -18,10 +18,10 @@ export const IncidentFeed = memo(function IncidentFeed() {
       if (Array.isArray(data)) {
         setIncidents(data);
       } else {
-        console.error('Failed to fetch incidents:', data);
+        // failed silently
       }
-    } catch (e) {
-      console.error('Error fetching incidents:', e);
+    } catch (_e) {
+      // silently ignore fetch errors
     }
   };
 
@@ -66,7 +66,7 @@ export const IncidentFeed = memo(function IncidentFeed() {
           incidents.map(inc => (
             <div key={inc.id} className={cn("p-4 rounded-xl border flex flex-col gap-2", getPriorityColor(inc.priority))}>
               <div className="flex justify-between items-start">
-                <h4 className="font-bold text-sm truncate">{inc.title}</h4>
+                <h3 className="font-bold text-sm truncate">{inc.title}</h3>
                 <span className="text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider bg-black/20">
                   {inc.priority}
                 </span>

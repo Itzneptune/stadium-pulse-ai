@@ -1,31 +1,33 @@
 import { triageIncident } from '../lib/gemini/triage';
 
-// We need to mock the google genai module
-jest.mock('@google/genai', () => {
-  return {
-    GoogleGenAI: jest.fn().mockImplementation(() => ({
-      models: {
-        generateContent: jest.fn().mockResolvedValue({
-          text: JSON.stringify({
-            title: 'Test Incident',
-            type: 'MEDICAL',
-            priority: 'HIGH',
-            summary: 'Mock summary',
-            actionPlan: ['Step 1'],
-            confidenceScore: 0.9
-          })
+jest.mock('@google/genai', () => ({
+  Type: {
+    OBJECT: 'OBJECT',
+    STRING: 'STRING',
+    ARRAY: 'ARRAY',
+    NUMBER: 'NUMBER',
+    BOOLEAN: 'BOOLEAN'
+  }
+}));
+
+jest.mock('../lib/gemini/client', () => ({
+  ai: {
+    models: {
+      generateContent: jest.fn().mockResolvedValue({
+        text: JSON.stringify({
+          title: 'Test Incident',
+          type: 'MEDICAL',
+          priority: 'HIGH',
+          summary: 'Mock summary',
+          actionPlan: ['Step 1'],
+          confidenceScore: 0.9
         })
-      }
-    })),
-    Type: {
-      OBJECT: 'OBJECT',
-      STRING: 'STRING',
-      ARRAY: 'ARRAY',
-      NUMBER: 'NUMBER',
-      BOOLEAN: 'BOOLEAN'
+      })
     }
-  };
-});
+  }
+}));
+
+import { ai } from '../lib/gemini/client';
 
 describe('triageIncident', () => {
   it('parses the Gemini response into a structured object', async () => {
@@ -36,5 +38,12 @@ describe('triageIncident', () => {
     expect(result?.type).toBe('MEDICAL');
     expect(result?.priority).toBe('HIGH');
     expect(result?.actionPlan).toContain('Step 1');
+  });
+
+  it('returns null when Gemini response is empty', async () => {
+    (ai.models.generateContent as jest.Mock).mockResolvedValueOnce({ text: null });
+    
+    const result = await triageIncident('Something happened');
+    expect(result).toBeNull();
   });
 });

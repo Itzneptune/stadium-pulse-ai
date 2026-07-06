@@ -7,11 +7,23 @@ export async function GET() {
   try {
     const incidents = await prisma.incident.findMany({
       orderBy: { createdAt: 'desc' },
-      take: 20
+      take: 20,
+      select: {
+        id: true,
+        title: true,
+        type: true,
+        status: true,
+        priority: true,
+        zoneId: true,
+        createdAt: true,
+      }
     });
-    return NextResponse.json(incidents);
-  } catch (error) {
-    console.error('Prisma Error:', error);
+    return NextResponse.json(incidents, {
+      headers: {
+        'Cache-Control': 'public, s-maxage=5, stale-while-revalidate=10',
+      },
+    });
+  } catch (_error) {
     return NextResponse.json([]);
   }
 }

@@ -39,7 +39,7 @@ export const getSeverityStyles = (severity: Severity) => {
 };
 
 // Returns Tailwind classes for fill colors used in SVGs/Heatmaps
-export const getSeverityFill = (severity: Severity, category: Category = 'CROWD') => {
+export const getSeverityFill = (severity: Severity) => {
   // If we wanted category-specific heatmaps, we could use the category color. 
   // For standard heatmaps, we usually map severity to a specific scale.
   // The Prompt requires the category colors to be standard, but heatmaps usually use green->red.

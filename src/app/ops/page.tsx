@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, Activity, FileText, Loader2, Download } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
@@ -35,26 +35,28 @@ export default function OpsCommandCenter() {
           }
           setDensities(newDensities);
         }
-      } catch (e) {}
+      } catch (_e) {
+        // SSE parse error — silently ignore
+      }
     };
     return () => eventSource.close();
   }, []);
 
-  const handleGenerateReport = async () => {
+  const handleGenerateReport = useCallback(async () => {
     setReportLoading(true);
     try {
       const res = await fetch('/api/ops/shift-report');
       const data = await res.json();
       setReport(data.report);
-    } catch (e) {
-      console.error(e);
+    } catch (_e) {
+      // Report generation failed silently
     } finally {
       setReportLoading(false);
     }
-  };
+  }, []);
 
   return (
-    <div className="min-h-screen flex flex-col bg-wc-navy text-wc-text">
+    <div className="min-h-screen flex flex-col bg-wc-navy text-wc-text" id="main-content">
       {/* Header */}
       <header className="bg-wc-surface border-b border-wc-surface-hover p-4 flex items-center justify-between sticky top-0 z-50">
         <div className="flex items-center gap-4">
@@ -97,7 +99,7 @@ export default function OpsCommandCenter() {
 
       {/* Report Modal */}
       {report && (
-        <div className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-label="Shift Handover Report">
           <div className="bg-wc-surface border border-wc-surface-hover rounded-2xl w-full max-w-3xl max-h-[85vh] flex flex-col shadow-2xl animate-in fade-in zoom-in-95">
             <div className="p-4 border-b border-wc-surface-hover flex justify-between items-center bg-wc-navy rounded-t-2xl">
               <h2 className="font-bold text-lg flex items-center gap-2">

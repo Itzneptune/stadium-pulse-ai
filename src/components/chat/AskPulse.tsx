@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
-import { Send, Loader2, Bot, User, Accessibility } from 'lucide-react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
+import { Send, Bot, Accessibility } from 'lucide-react';
 import { cn } from '../stadium/StadiumMap';
 
 interface Message {
@@ -30,7 +30,7 @@ export function AskPulse({
     endRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  const handleSend = async (e: React.FormEvent) => {
+  const handleSend = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim() || loading) return;
 
@@ -60,12 +60,12 @@ export function AskPulse({
       if (data.route && Array.isArray(data.route)) {
         onRouteReceived(data.route);
       }
-    } catch (err) {
+    } catch (_e) {
       setMessages(prev => [...prev, { id: Date.now().toString() + 'e', sender: 'MODEL', content: 'Sorry, I am having trouble connecting right now.' }]);
     } finally {
       setLoading(false);
     }
-  };
+  }, [input, loading, accessibilityMode, onRouteReceived]);
 
   return (
     <div className="flex flex-col h-[500px] w-full max-w-md bg-wc-surface border border-wc-surface-hover rounded-2xl overflow-hidden shadow-xl">
@@ -102,7 +102,7 @@ export function AskPulse({
         ))}
         {loading && (
           <div className="flex justify-start">
-            <div className="bg-wc-navy p-3 rounded-2xl rounded-tl-sm border border-wc-surface-hover flex gap-1">
+            <div className="bg-wc-navy p-3 rounded-2xl rounded-tl-sm border border-wc-surface-hover flex gap-1" role="status" aria-label="Loading response">
               <span className="w-2 h-2 rounded-full bg-wc-cyan animate-bounce" />
               <span className="w-2 h-2 rounded-full bg-wc-cyan animate-bounce [animation-delay:-0.15s]" />
               <span className="w-2 h-2 rounded-full bg-wc-cyan animate-bounce [animation-delay:-0.3s]" />

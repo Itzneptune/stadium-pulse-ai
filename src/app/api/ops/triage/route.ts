@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { triageIncident } from '@/lib/gemini/triage';
 import { globalRateLimiter } from '@/lib/rate-limit';
+import { sanitize } from '@/lib/sanitize';
 import prisma from '@/lib/db';
 import { simEngine } from '@/lib/simulation/engine';
 
@@ -21,15 +22,17 @@ export async function POST(req: NextRequest) {
     if (zoneId && typeof zoneId !== 'string') {
       return NextResponse.json({ error: 'Invalid zoneId format' }, { status: 400 });
     }
+    
+    const sanitizedDescription = sanitize(description);
 
-    const aiTriage = await triageIncident(description);
+    const aiTriage = await triageIncident(sanitizedDescription);
     
     if (aiTriage) {
       const incident = await prisma.incident.create({
         data: {
           title: aiTriage.title,
           type: aiTriage.type,
-          description,
+          description: sanitizedDescription,
           zoneId: zoneId || 'unknown',
           status: 'OPEN',
           priority: aiTriage.priority,

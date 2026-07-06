@@ -53,8 +53,10 @@ export default function VolunteerApp() {
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4 bg-wc-surface p-6 rounded-2xl border border-wc-surface-hover shadow-xl">
           <div>
-            <label className="block text-sm font-semibold mb-2">Location (Zone)</label>
+            <label htmlFor="zone-select" className="block text-sm font-semibold mb-2">Location (Zone)</label>
             <select 
+              id="zone-select"
+              aria-label="Location (Zone)"
               value={zone} 
               onChange={e => setZone(e.target.value)}
               className="w-full bg-wc-navy border border-wc-surface-hover rounded-lg p-3 text-wc-text focus:outline-none focus:border-wc-lime"
@@ -67,9 +69,10 @@ export default function VolunteerApp() {
           </div>
 
           <div>
-            <label className="block text-sm font-semibold mb-2">What&apos;s happening?</label>
+            <label htmlFor="observation-text" className="block text-sm font-semibold mb-2">What&apos;s happening?</label>
             <div className="relative">
               <textarea
+                id="observation-text"
                 value={observation}
                 onChange={e => setObservation(e.target.value)}
                 placeholder="E.g., Spill near the east restrooms causing a slip hazard..."
@@ -95,7 +98,7 @@ export default function VolunteerApp() {
         </form>
 
         {success && (
-          <div className="bg-wc-surface border border-wc-lime/50 text-wc-lime p-4 rounded-xl flex items-center justify-center gap-3 animate-in fade-in slide-in-from-bottom-4">
+          <div className="bg-wc-surface border border-wc-lime/50 text-wc-lime p-4 rounded-xl flex items-center justify-center gap-3 animate-in fade-in slide-in-from-bottom-4" role="status" aria-live="polite">
             <CheckCircle size={24} />
             <span className="font-semibold">Observation logged & triaged!</span>
           </div>

@@ -10,11 +10,6 @@ export function cn(...inputs: (string | undefined | null | false)[]) {
 
 export type Density = 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
 
-interface ZoneOverlayProps {
-  id: string;
-  density?: Density;
-  isRoute?: boolean;
-}
 
 const getFillByDensity = (density?: Density) => {
   switch (density) {
@@ -60,7 +55,7 @@ export const StadiumMap = React.memo(function StadiumMap({
 
   return (
     <div className="w-full aspect-square md:aspect-video bg-wc-surface rounded-2xl overflow-hidden relative border border-wc-surface-hover shadow-2xl flex items-center justify-center p-4">
-      <svg viewBox="0 0 800 600" className="w-full h-full max-h-[70vh]">
+      <svg viewBox="0 0 800 600" className="w-full h-full max-h-[70vh]" role="img" aria-label="Interactive Stadium Map">
         {/* Field (Center) */}
         <rect x="250" y="150" width="300" height="300" rx="20" className="fill-green-900/30 stroke-green-500/30 stroke-2" />
         <line x1="400" y1="150" x2="400" y2="450" className="stroke-green-500/30 stroke-2" />

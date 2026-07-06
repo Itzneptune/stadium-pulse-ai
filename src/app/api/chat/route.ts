@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { askPulse } from '@/lib/gemini/wayfinding';
 import { globalRateLimiter } from '@/lib/rate-limit';
+import { sanitize } from '@/lib/sanitize';
 import prisma from '@/lib/db';
 
 export async function POST(req: NextRequest) {
@@ -19,8 +20,10 @@ export async function POST(req: NextRequest) {
     if (query.length > 500) {
       return NextResponse.json({ error: 'Query exceeds maximum length of 500 characters' }, { status: 400 });
     }
+    
+    const sanitizedQuery = sanitize(query);
 
-    const aiResponse = await askPulse(query, language, accessibilityMode);
+    const aiResponse = await askPulse(sanitizedQuery, language, accessibilityMode);
 
     // If we have a sessionId, store the message (Mocking simple storage here for demo)
     if (sessionId) {
@@ -43,6 +46,6 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json(aiResponse);
   } catch (error) {
-    return NextResponse.json({ error: 'Failed to process chat' }, { status: 500 });
+    console.error(error); return NextResponse.json({ error: 'Failed to process chat' }, { status: 500 });
   }
 }
