@@ -1,0 +1,43 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Incident {
+  id              String   @id @default(cuid())
+  title           String
+  type            String   // MEDICAL, SECURITY, FACILITY, CROWD
+  description     String
+  zoneId          String
+  status          String   // OPEN, IN_PROGRESS, RESOLVED
+  priority        String   // LOW, MEDIUM, HIGH, CRITICAL
+  reportedByRole  String   // FAN, VOLUNTEER, SYSTEM
+  aiSummary       String?  // Gemini generated summary
+  aiActionPlan    String?  // Gemini generated suggested actions
+  createdAt       DateTime @default(now())
+  resolvedAt      DateTime?
+}
+
+model ChatSession {
+  id        String    @id @default(cuid())
+  role      String    // FAN, VOLUNTEER, OPS
+  language  String    @default("en")
+  messages  Message[]
+}
+
+model Message {
+  id            String      @id @default(cuid())
+  sessionId     String
+  session       ChatSession @relation(fields: [sessionId], references: [id])
+  sender        String      // USER, MODEL
+  content       String
+  routeData     String?     // JSON string for structured UI rendering (wayfinding)
+  createdAt     DateTime    @default(now())
+}

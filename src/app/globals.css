@@ -1,26 +1,39 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  --color-wc-magenta: #E5005A;
+  --color-wc-cyan: #00D3B0;
+  --color-wc-lime: #D0DF00;
+  --color-wc-navy: #050A30;
+  --color-wc-surface: #101642;
+  --color-wc-surface-hover: #1A2255;
+  --color-wc-text: #F8FAFC;
+  --color-wc-text-muted: #94A3B8;
+
+  --color-critical: #EF4444;
+  --color-high: #F97316;
+  --color-medium: #EAB308;
+  --color-low: #22C55E;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  html, body {
+    @apply bg-[var(--color-wc-navy)] text-[var(--color-wc-text)] font-sans antialiased m-0 p-0 overflow-x-hidden;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Custom Scrollbar for Chat / Dashboards */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-wc-surface-hover);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-wc-text-muted);
 }
