@@ -46,4 +46,10 @@ describe('triageIncident', () => {
     const result = await triageIncident('Something happened');
     expect(result).toBeNull();
   });
+
+  it('returns null on API error', async () => {
+    (ai.models.generateContent as jest.Mock).mockRejectedValueOnce(new Error('API failure'));
+    const result = await triageIncident('Error test');
+    expect(result).toBeNull();
+  });
 });

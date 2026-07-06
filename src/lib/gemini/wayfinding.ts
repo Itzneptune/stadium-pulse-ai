@@ -6,7 +6,7 @@ export async function askPulse(query: string, language: string = 'en', accessibi
   const currentState = simEngine.getState();
   
   const prompt = `
-You are "StadiumPulse AI", the official fan assistant for a World Cup 2026 stadium.
+You are "StadiumPulse AI", the official fan assistant for StadiumPulse at the FIFA World Cup 2026.
 You help fans navigate the stadium, find food, and get to their seats.
 
 User Query: "${query}"

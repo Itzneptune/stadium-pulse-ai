@@ -21,6 +21,32 @@ const getFillByDensity = (density?: Density) => {
   }
 };
 
+const ZoneOverlay = React.memo(({ 
+  id, d, label, cx, cy, density, isRoute 
+}: { 
+  id: string, d: string, label: string, cx: number, cy: number, density: Density, isRoute: boolean 
+}) => {
+  return (
+    <g key={id} className="transition-all duration-500 group" role="img" aria-label={`Zone ${label}. Current density: ${density}`}>
+      <title>{label} - {density} Density</title>
+      <path 
+        d={d} 
+        className={cn(
+          "stroke-wc-surface-hover stroke-2 transition-colors duration-500",
+          getFillByDensity(density),
+          isRoute && "stroke-wc-cyan stroke-[4px] filter drop-shadow-[0_0_8px_rgba(0,211,176,0.8)]"
+        )}
+      />
+      {/* Label Background */}
+      <rect x={cx - 30} y={cy - 12} width={60} height={24} rx={4} className="fill-wc-navy/80" />
+      <text x={cx} y={cy + 4} textAnchor="middle" className="fill-wc-text text-[10px] font-bold pointer-events-none">
+        {label}
+      </text>
+    </g>
+  );
+});
+ZoneOverlay.displayName = 'ZoneOverlay';
+
 export const StadiumMap = React.memo(function StadiumMap({ 
   zoneDensities = {}, 
   highlightRoute = [] 
@@ -28,28 +54,18 @@ export const StadiumMap = React.memo(function StadiumMap({
   zoneDensities?: Record<string, Density>,
   highlightRoute?: string[]
 }) {
-  
-  // A helper to render a polygon/rect for a zone
   const renderZone = (id: string, d: string, label: string, cx: number, cy: number) => {
-    const density = zoneDensities[id] || 'LOW';
-    const isRoute = highlightRoute.includes(id);
-
     return (
-      <g key={id} className="transition-all duration-500 group">
-        <path 
-          d={d} 
-          className={cn(
-            "stroke-wc-surface-hover stroke-2 transition-colors duration-500",
-            getFillByDensity(density),
-            isRoute && "stroke-wc-cyan stroke-[4px] filter drop-shadow-[0_0_8px_rgba(0,211,176,0.8)]"
-          )}
-        />
-        {/* Label Background */}
-        <rect x={cx - 30} y={cy - 12} width={60} height={24} rx={4} className="fill-wc-navy/80" />
-        <text x={cx} y={cy + 4} textAnchor="middle" className="fill-wc-text text-[10px] font-bold pointer-events-none">
-          {label}
-        </text>
-      </g>
+      <ZoneOverlay
+        key={id}
+        id={id}
+        d={d}
+        label={label}
+        cx={cx}
+        cy={cy}
+        density={zoneDensities[id] || 'LOW'}
+        isRoute={highlightRoute.includes(id)}
+      />
     );
   };
 

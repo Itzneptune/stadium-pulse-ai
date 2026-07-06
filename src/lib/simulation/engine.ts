@@ -2,13 +2,13 @@ import { SimulationState, ZoneState, SimulationEvent } from './types';
 import prisma from '../db';
 
 const INITIAL_ZONES: Record<string, ZoneState> = {
-  'gate-a': { id: 'gate-a', name: 'Gate A (North)', type: 'GATE', capacity: 1000, currentOccupancy: 200, densityLevel: 'LOW', status: 'OPEN' },
-  'gate-b': { id: 'gate-b', name: 'Gate B (East)', type: 'GATE', capacity: 1000, currentOccupancy: 800, densityLevel: 'HIGH', status: 'OPEN' },
+  'gate-a': { id: 'gate-a', name: 'Gate A (North - USA vs Mexico)', type: 'GATE', capacity: 1000, currentOccupancy: 200, densityLevel: 'LOW', status: 'OPEN' },
+  'gate-b': { id: 'gate-b', name: 'Gate B (East - VIP/FIFA)', type: 'GATE', capacity: 1000, currentOccupancy: 800, densityLevel: 'HIGH', status: 'OPEN' },
   'gate-c': { id: 'gate-c', name: 'Gate C (South)', type: 'GATE', capacity: 1000, currentOccupancy: 150, densityLevel: 'LOW', status: 'OPEN' },
   'gate-d': { id: 'gate-d', name: 'Gate D (West)', type: 'GATE', capacity: 1000, currentOccupancy: 450, densityLevel: 'MEDIUM', status: 'OPEN' },
   'concourse-1': { id: 'concourse-1', name: 'Level 1 Concourse', type: 'CONCOURSE', capacity: 5000, currentOccupancy: 1200, densityLevel: 'LOW', status: 'OPEN' },
   'concourse-2': { id: 'concourse-2', name: 'Level 2 Concourse', type: 'CONCOURSE', capacity: 5000, currentOccupancy: 3500, densityLevel: 'HIGH', status: 'OPEN' },
-  'concession-east': { id: 'concession-east', name: 'East Food Court', type: 'CONCESSION', capacity: 500, currentOccupancy: 480, densityLevel: 'CRITICAL', status: 'OPEN' },
+  'concession-east': { id: 'concession-east', name: 'East Food Court (World Cup Special)', type: 'CONCESSION', capacity: 500, currentOccupancy: 480, densityLevel: 'CRITICAL', status: 'OPEN' },
   'concession-west': { id: 'concession-west', name: 'West Food Court', type: 'CONCESSION', capacity: 500, currentOccupancy: 150, densityLevel: 'LOW', status: 'OPEN' },
   'transit-hub': { id: 'transit-hub', name: 'Metro Station Connect', type: 'TRANSIT', capacity: 2000, currentOccupancy: 300, densityLevel: 'LOW', status: 'OPEN' },
 };

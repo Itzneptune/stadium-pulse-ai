@@ -35,8 +35,8 @@ export default function OpsCommandCenter() {
           }
           setDensities(newDensities);
         }
-      } catch (_e) {
-        // SSE parse error — silently ignore
+      } catch (error) {
+        console.error('SSE parse error:', error);
       }
     };
     return () => eventSource.close();
@@ -48,7 +48,8 @@ export default function OpsCommandCenter() {
       const res = await fetch('/api/ops/shift-report');
       const data = await res.json();
       setReport(data.report);
-    } catch (_e) {
+    } catch (error) {
+      console.error('Failed to generate report:', error);
       // Report generation failed silently
     } finally {
       setReportLoading(false);

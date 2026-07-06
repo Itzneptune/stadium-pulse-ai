@@ -11,7 +11,8 @@ export async function GET() {
         'Cache-Control': 'public, s-maxage=30, stale-while-revalidate=60',
       },
     });
-  } catch (_error) {
+  } catch (error) {
+    console.error('Failed to fetch advisory:', error);
     return NextResponse.json({ error: 'Failed to generate advisories' }, { status: 500 });
   }
 }

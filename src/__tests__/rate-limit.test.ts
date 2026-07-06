@@ -63,4 +63,12 @@ describe('RateLimiter', () => {
     // Limit is 2. There is currently 1 valid request.
     expect(limiter.check('ip1')).toBe(true);
   });
+
+  it('resets the rate limiter', () => {
+    limiter = new RateLimiter(1, 100);
+    limiter.check('ip1');
+    expect(limiter.check('ip1')).toBe(false);
+    limiter.reset();
+    expect(limiter.check('ip1')).toBe(true);
+  });
 });

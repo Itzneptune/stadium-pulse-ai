@@ -11,7 +11,7 @@ if (typeof Request === 'undefined') {
 if (typeof Response === 'undefined') {
   Object.defineProperty(global, 'Response', { 
     value: class Response {
-      static json(data: any, init?: any) {
+      static json(data: unknown, init?: { status?: number }) {
         return {
           status: init?.status || 200,
           json: async () => data
@@ -26,15 +26,19 @@ if (typeof Headers === 'undefined') {
 
 jest.mock('next/server', () => ({
   NextResponse: {
-    json: (body: any, init?: any) => ({
+    json: jest.fn().mockImplementation((body: unknown, init?: { status?: number }) => ({
       status: init?.status || 200,
-      json: async () => body,
-    }),
+      json: async () => body
+    }))
   },
   NextRequest: class NextRequest {
-    body: any;
-    constructor(url: string, init: any) {
+    body: string;
+    headers: { get: (key: string) => string | null };
+    constructor(url: string, init: { body: string, headers?: Record<string, string> }) {
       this.body = init.body;
+      this.headers = {
+        get: (key: string) => init.headers?.[key] || null
+      };
     }
     async json() { return JSON.parse(this.body); }
   }

@@ -1,18 +1,25 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { simulateWhatIf } from '@/lib/gemini/triage';
+import { z } from 'zod';
+import { simulateWhatIf } from '@/lib/gemini/what-if';
+import { sanitize } from '@/lib/sanitize';
+
+const WhatIfSchema = z.object({
+  query: z.string({ required_error: 'Valid string query is required', invalid_type_error: 'Valid string query is required' }).min(1, 'Valid string query is required').max(250, 'Query exceeds maximum length of 250 characters'),
+});
 
 export async function POST(req: NextRequest) {
   try {
-    const { query } = await req.json();
+    const body = await req.json();
+    const parsed = WhatIfSchema.safeParse(body);
     
-    if (!query || typeof query !== 'string') {
-      return NextResponse.json({ error: 'Valid string query is required' }, { status: 400 });
+    if (!parsed.success) {
+      return NextResponse.json({ error: parsed.error.errors?.[0]?.message || parsed.error.issues?.[0]?.message || 'Validation error' }, { status: 400 });
     }
-    if (query.length > 250) {
-      return NextResponse.json({ error: 'Query exceeds maximum length of 250 characters' }, { status: 400 });
-    }
-
-    const simulation = await simulateWhatIf(query);
+    
+    const { query } = parsed.data;
+    
+    const sanitizedQuery = sanitize(query);
+    const simulation = await simulateWhatIf(sanitizedQuery);
     
     if (simulation) {
       return NextResponse.json(simulation);
@@ -20,6 +27,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ error: 'Failed to simulate scenario' }, { status: 500 });
   } catch (error) {
+    console.error('What-If simulation error:', error);
     return NextResponse.json({ error: 'Failed to process what-if scenario' }, { status: 500 });
   }
 }

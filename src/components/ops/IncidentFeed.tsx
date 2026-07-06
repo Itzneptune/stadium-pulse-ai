@@ -20,8 +20,8 @@ export const IncidentFeed = memo(function IncidentFeed() {
       } else {
         // failed silently
       }
-    } catch (_e) {
-      // silently ignore fetch errors
+    } catch (error) {
+      console.error('Failed to fetch incidents:', error);
     }
   };
 

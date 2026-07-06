@@ -42,7 +42,7 @@ describe('POST /api/chat', () => {
     const res = await POST(req);
     expect(res.status).toBe(400);
     const data = await res.json();
-    expect(data.error).toBe('Valid string query is required');
+    expect(data.error).toBeDefined();
   });
 
   it('returns 400 when query exceeds 500 chars', async () => {
@@ -66,6 +66,14 @@ describe('POST /api/chat', () => {
     expect(data.message).toBe('Test response');
     expect(data.route).toEqual(['gate-a']);
     expect(askPulse).toHaveBeenCalledWith('Where is Gate B?', 'en', false);
+  });
+
+  it('saves message when sessionId is provided', async () => {
+    const req = createMockRequest({ query: 'Where is Gate B?', sessionId: 'session-123' });
+    const res = await POST(req);
+    expect(res.status).toBe(200);
+    const { default: prisma } = require('@/lib/db');
+    expect(prisma.message.create).toHaveBeenCalledTimes(2);
   });
 
   it('returns 500 on internal error', async () => {

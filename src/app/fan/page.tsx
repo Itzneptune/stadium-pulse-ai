@@ -30,8 +30,8 @@ export default function FanApp() {
           }
           setDensities(newDensities);
         }
-      } catch (_e) {
-        // SSE parse error — silently ignore malformed frames
+      } catch (error) {
+        console.error('SSE parse error:', error);
       }
     };
 
@@ -49,7 +49,8 @@ export default function FanApp() {
         if (data && data.fanAdvisory) {
           setAdvisory(data.fanAdvisory);
         }
-      } catch (_e) {
+      } catch (error) {
+        console.error('Failed to fetch advisory:', error);
         // silently fail — advisory is non-critical
       }
     };

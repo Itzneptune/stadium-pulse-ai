@@ -1,26 +1,30 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { z } from 'zod';
 import { triageIncident } from '@/lib/gemini/triage';
 import { globalRateLimiter } from '@/lib/rate-limit';
 import { sanitize } from '@/lib/sanitize';
 import prisma from '@/lib/db';
 import { simEngine } from '@/lib/simulation/engine';
 
+const TriageSchema = z.object({
+  description: z.string({ required_error: 'Valid string description is required', invalid_type_error: 'Valid string description is required' }).min(1, 'Valid string description is required').max(1000, 'Description exceeds maximum length of 1000 characters'),
+  zoneId: z.string().optional(),
+  reportedByRole: z.string().optional(),
+});
+
 export async function POST(req: NextRequest) {
   try {
-    const { description, zoneId, reportedByRole } = await req.json();
+    const body = await req.json();
+    const parsed = TriageSchema.safeParse(body);
+    
+    if (!parsed.success) {
+      return NextResponse.json({ error: parsed.error.errors?.[0]?.message || parsed.error.issues?.[0]?.message || 'Validation error' }, { status: 400 });
+    }
+    
+    const { description, zoneId, reportedByRole } = parsed.data;
     const ip = req.headers.get('x-forwarded-for') || '127.0.0.1';
     if (!globalRateLimiter.check(ip)) {
       return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
-    }
-    
-    if (!description || typeof description !== 'string') {
-      return NextResponse.json({ error: 'Valid string description is required' }, { status: 400 });
-    }
-    if (description.length > 1000) {
-      return NextResponse.json({ error: 'Description exceeds maximum length of 1000 characters' }, { status: 400 });
-    }
-    if (zoneId && typeof zoneId !== 'string') {
-      return NextResponse.json({ error: 'Invalid zoneId format' }, { status: 400 });
     }
     
     const sanitizedDescription = sanitize(description);
@@ -50,6 +54,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ error: 'Failed to triage incident' }, { status: 500 });
   } catch (error) {
+    console.error('Triage error:', error);
     return NextResponse.json({ error: 'Failed to process triage' }, { status: 500 });
   }
 }

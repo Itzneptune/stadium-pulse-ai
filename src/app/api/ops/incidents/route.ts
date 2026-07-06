@@ -23,7 +23,8 @@ export async function GET() {
         'Cache-Control': 'public, s-maxage=5, stale-while-revalidate=10',
       },
     });
-  } catch (_error) {
+  } catch (error) {
+    console.error('Failed to fetch incidents:', error);
     return NextResponse.json([]);
   }
 }

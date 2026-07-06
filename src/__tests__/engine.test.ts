@@ -12,6 +12,7 @@ jest.mock('../lib/db', () => ({
 
 describe('SimulationEngine', () => {
   beforeEach(() => {
+    jest.useFakeTimers();
     // Reset state before each test
     simEngine['state'] = {
       timestamp: new Date().toISOString(),
@@ -77,5 +78,45 @@ describe('SimulationEngine', () => {
     expect(state.zones['concession-east'].densityLevel).toBe('CRITICAL');
     // Concourses at 85% should be HIGH
     expect(state.zones['concourse-1'].densityLevel).toBe('HIGH');
+  });
+
+  it('reportIncident creates an incident and notifies listeners', async () => {
+    const listener = jest.fn();
+    simEngine.subscribe(listener);
+    
+    // the mock returns id: test-id-1
+    const incident = await simEngine.reportIncident('gate-a', 'MEDICAL', 'Test desc', 'VOLUNTEER');
+    
+    expect(incident.id).toBe('test-id-1');
+    expect(simEngine.getState().activeIncidentIds).toContain('test-id-1');
+    expect(listener).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.objectContaining({ type: 'INCIDENT_NEW' })
+    );
+  });
+
+  it('starts, ticks, and stops correctly', () => {
+    const mockListener = jest.fn();
+    simEngine.subscribe(mockListener);
+    mockListener.mockClear();
+
+    simEngine.start();
+    // Advance timers by 5 seconds
+    jest.advanceTimersByTime(5000);
+    
+    // Tick should have fired
+    expect(mockListener).toHaveBeenCalled();
+    
+    mockListener.mockClear();
+    simEngine.stop();
+    jest.advanceTimersByTime(5000);
+    
+    // Should not fire again since it was stopped
+    expect(mockListener).not.toHaveBeenCalled();
+  });
+  
+  afterEach(() => {
+    simEngine.stop();
+    jest.useRealTimers();
   });
 });

@@ -60,7 +60,8 @@ export function AskPulse({
       if (data.route && Array.isArray(data.route)) {
         onRouteReceived(data.route);
       }
-    } catch (_e) {
+    } catch (error) {
+      console.error('AskPulse error:', error);
       setMessages(prev => [...prev, { id: Date.now().toString() + 'e', sender: 'MODEL', content: 'Sorry, I am having trouble connecting right now.' }]);
     } finally {
       setLoading(false);
