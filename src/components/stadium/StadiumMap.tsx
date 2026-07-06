@@ -26,7 +26,7 @@ const getFillByDensity = (density?: Density) => {
   }
 };
 
-export function StadiumMap({ 
+export const StadiumMap = React.memo(function StadiumMap({ 
   zoneDensities = {}, 
   highlightRoute = [] 
 }: { 
@@ -103,4 +103,4 @@ export function StadiumMap({
       </div>
     </div>
   );
-}
+});

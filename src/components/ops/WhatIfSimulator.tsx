@@ -45,7 +45,7 @@ export function WhatIfSimulator() {
     <div className="bg-wc-surface border border-wc-surface-hover rounded-2xl p-6 shadow-xl">
       <div className="flex items-center gap-2 mb-4">
         <Sparkles className="text-wc-cyan" />
-        <h2 className="text-xl font-bold">AI "What-If" Simulator</h2>
+        <h2 className="text-xl font-bold">AI &quot;What-If&quot; Simulator</h2>
       </div>
       
       <p className="text-sm text-wc-text-muted mb-4">
@@ -58,12 +58,14 @@ export function WhatIfSimulator() {
           value={query}
           onChange={e => setQuery(e.target.value)}
           placeholder="What happens if we close Gate B for 15 mins?"
-          className="flex-1 bg-wc-navy border border-wc-surface-hover rounded-lg px-4 py-2 text-sm focus:outline-none focus:border-wc-cyan"
+          aria-label="Simulation scenario"
+          className="flex-1 bg-wc-navy border border-wc-surface-hover rounded-lg px-4 py-2 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-wc-cyan"
         />
         <button 
           type="submit" 
           disabled={!query || loading}
-          className="px-4 py-2 bg-wc-cyan text-wc-navy rounded-lg font-bold flex items-center gap-2 disabled:opacity-50 hover:bg-wc-cyan/80 transition-colors"
+          aria-label="Run simulation"
+          className="px-4 py-2 bg-wc-cyan text-wc-navy rounded-lg font-bold flex items-center gap-2 disabled:opacity-50 hover:bg-wc-cyan/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-wc-cyan transition-colors"
         >
           {loading ? <Loader2 className="animate-spin" size={16} /> : <Play size={16} />}
           Simulate
@@ -89,10 +91,18 @@ export function WhatIfSimulator() {
       <div className="mt-8 pt-4 border-t border-wc-surface-hover">
         <h4 className="text-xs text-wc-text-muted uppercase mb-3">Live Demo Controls</h4>
         <div className="flex gap-2">
-          <button onClick={() => triggerSurge('HALFTIME')} className="text-xs px-3 py-1.5 bg-wc-surface-hover hover:bg-wc-magenta/20 hover:text-wc-magenta rounded transition-colors">
+          <button 
+            onClick={() => triggerSurge('HALFTIME')} 
+            aria-label="Trigger Halftime Rush simulation"
+            className="text-xs px-3 py-1.5 bg-wc-surface-hover hover:bg-wc-magenta/20 hover:text-wc-magenta rounded transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-wc-magenta"
+          >
             Trigger Halftime Rush
           </button>
-          <button onClick={() => triggerSurge('POST_MATCH')} className="text-xs px-3 py-1.5 bg-wc-surface-hover hover:bg-wc-cyan/20 hover:text-wc-cyan rounded transition-colors">
+          <button 
+            onClick={() => triggerSurge('POST_MATCH')} 
+            aria-label="Trigger Post-Match Exit simulation"
+            className="text-xs px-3 py-1.5 bg-wc-surface-hover hover:bg-wc-cyan/20 hover:text-wc-cyan rounded transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-wc-cyan"
+          >
             Trigger Post-Match Exit
           </button>
         </div>

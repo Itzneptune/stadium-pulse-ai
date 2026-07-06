@@ -1,58 +1,43 @@
 # StadiumPulse AI 🏟️⚡
 
-> **One AI brain for every gate, every fan, every decision.**
+**StadiumPulse AI** is a competition-grade submission for the **Google Prompt Wars — Challenge 4: Smart Stadiums & Tournament Operations**, built around the theme of the **FIFA World Cup 2026**.
 
-**StadiumPulse AI** is a competition-grade smart stadium operations platform built for the **FIFA World Cup 2026** (Google Prompt Wars — Challenge 4: Smart Stadiums & Tournament Operations). It unites fans, volunteers, and operations staff under a single, real-time intelligence layer powered by the Google Gemini API.
+## 1. Chosen Vertical
+**Vertical:** Smart Stadiums & Tournament Operations (Fan Experience, Operational Intelligence, & Volunteer Management).
 
----
+This project focuses on the complex, chaotic ecosystem of a massive sporting event. When 80,000 fans, 5,000 volunteers, and hundreds of operations staff converge, standard software fails. StadiumPulse AI acts as a central nervous system, connecting these three personas into a single, real-time intelligence layer powered by Google Gemini.
 
-## 🌟 Key Features
+## 2. Approach and Logic
+The logic of StadiumPulse AI revolves around **Persona-Driven AI**. Rather than building one generic dashboard, the Gemini API is contextualized for three distinct users:
+1. **The Fan:** Needs immediate, low-friction answers. We use Gemini to power **AskPulse**, a mobile-first concierge that parses natural language ("Where's the closest food to Gate B?") and returns accessible, visual routing.
+2. **The Volunteer:** Needs to act quickly without navigating complex forms. We built a hyper-utilitarian reporting tool where volunteers simply type or speak what they see ("Spill near East Concourse").
+3. **The Ops Staff:** Needs high-level synthesis and predictive power. We use Gemini's structured outputs to automatically triage incoming volunteer reports (assigning priority and action plans), and a **What-If Simulator** to project the consequences of operational decisions (e.g., "What happens if we close Gate B?").
 
-The platform is divided into three distinct, persona-driven portals:
+## 3. How the Solution Works
+- **Tech Stack:** Next.js 15 (App Router), TypeScript, Tailwind CSS, Prisma (SQLite).
+- **Real-Time Telemetry:** The application uses Server-Sent Events (SSE) to broadcast live stadium crowd densities from a background simulation engine to the client without polling.
+- **AI Integration (Gemini):**
+  - **Structured Outputs (JSON Schema):** We heavily utilize Gemini's structured outputs via the `@google/genai` SDK to force the model to return strongly typed JSON for incidents and simulations. This prevents parsing errors and allows the React frontend to reliably render AI-generated UI components (like the Incident Feed).
+  - **Context Injection:** The live state of the stadium (crowd densities, closed gates) is serialized and injected into the system prompt for every Gemini API call. This ensures the AI's advice and triage decisions are based on the *current* reality of the stadium, not generic knowledge.
 
-### 1. Fan Experience Portal
-An immersive, mobile-first interface designed to remove friction from the matchday experience.
-* **AskPulse AI Assistant:** A multilingual AI concierge that understands natural language queries (e.g., *"Where is the nearest halal food near Gate B?"*) and plots real-time, animated routes on the stadium map.
-* **Accessibility Routing:** One-tap toggle to ensure AI-generated routes prioritize elevators and ramps.
-* **Live Advisories:** Real-time push notifications alerting fans to gate closures or crowd surges.
-
-### 2. Ops Command Center
-A mission-control dashboard for stadium operators to maintain situational awareness and anticipate bottlenecks.
-* **Live Telemetry (SSE):** Real-time heatmap of stadium zone densities (Low, Medium, High, Critical) streamed directly to the client.
-* **AI Incident Triage:** Automatically ingests observations from volunteers, categorizes them (Medical, Crowd, Security, Maintenance), assigns a priority, and drafts an immediate Action Plan using Gemini.
-* **"What-If" Simulator:** Allows operators to query the AI with hypothetical scenarios (e.g., *"What happens if we close Gate B for 15 minutes?"*) and receive impact projections based on the live data stream.
-* **Automated Shift Reports:** Generates comprehensive, markdown-formatted handover reports summarizing the shift's major incidents and crowd dynamics.
-
-### 3. Volunteer Assist
-A hyper-utilitarian, zero-friction interface for on-the-ground staff.
-* **Natural Language Logging:** Volunteers simply type or dictate what they see (e.g., *"Large spill causing a slip hazard near the East Concourse"*), and the AI handles the categorization, routing, and prioritization automatically.
+## 4. Assumptions Made
+- **Hardware Profile:** We assumed that fans and volunteers will be operating entirely on mobile devices on congested cellular networks. Therefore, the UI prioritizes large tap targets, high contrast (Accessibility), and minimal client-side processing (offloading heavy logic to the server/Gemini).
+- **Database Architecture:** For the purposes of this prototype and ease of deployment, we are using a local Prisma SQLite database and an in-memory simulation engine. In a production environment, this would be swapped for a distributed database (like PostgreSQL/Firebase) and a dedicated telemetry stream (like Apache Kafka).
+- **Security Scope:** We assume standard web security applies; we have implemented Content Security Policies (CSP) and in-memory rate limiting to protect the Gemini API endpoints from prompt injection and DDoS/abuse.
 
 ---
 
-## 🛠️ Technical Architecture
+## Running Locally
 
-* **Framework:** [Next.js](https://nextjs.org/) 16 (App Router)
-* **Language:** [TypeScript](https://www.typescriptlang.org/)
-* **Styling & Motion:** [Tailwind CSS v4](https://tailwindcss.com/) + [Framer Motion](https://www.framer.com/motion/)
-* **AI Engine:** Google Gemini API (`@google/genai`)
-* **Real-time Data:** Server-Sent Events (SSE) via custom Node.js `SimulationEngine`
-* **Database (Mock):** Prisma ORM (configured for SQLite/In-memory for the prototype)
+1. `npm install`
+2. Create a `.env` file and add your `GEMINI_API_KEY=your_key_here`
+3. Initialize the database: `npx prisma db push`
+4. Run the development server: `npm run dev`
+5. Open [http://localhost:3000](http://localhost:3000)
 
-### Core Systems
-1. **Simulation Engine:** A background service that ticks every second, simulating crowd movement between stadium zones and occasionally triggering organic "incidents."
-2. **Gemini Structured Output:** The application heavily leverages Gemini's `responseSchema` to guarantee the AI returns strongly typed JSON (e.g., specific `route` arrays for the map, or specific `priority` enums for incidents).
-
----
-
-## 🎨 UI/UX Philosophy
-
-The application is built with a premium, bespoke aesthetic that breaks out of the standard "dashboard in a box" feel:
-* **Typography:** Utilizes bold, asymmetric type scales.
-* **Layout:** Features full-bleed background maps, floating glassmorphism panels (`backdrop-blur`), and asymmetric grids.
-* **Motion:** Strategic micro-interactions and route-drawing animations using Framer Motion to make the application feel tactile and responsive.
-
----
-
-## 📜 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+## Evaluation Focus Areas Addressed
+- **Code Quality:** Centralized types, JSDoc comments, strict TypeScript enforcement.
+- **Security:** CSP, HTTP Security Headers, API Rate Limiting, Input Validation.
+- **Efficiency:** React.memo for heavy map components, dynamic imports for lazy loading, SSE for real-time updates.
+- **Testing:** Jest + React Testing Library suites for UI components and AI logic wrappers.
+- **Accessibility:** Semantic HTML (`<main>`, `<nav>`), `aria-live` for dynamic AI regions, `focus-visible` outlines, and `role` attributes.

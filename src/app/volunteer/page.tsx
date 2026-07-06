@@ -34,7 +34,7 @@ export default function VolunteerApp() {
   return (
     <div className="min-h-screen flex flex-col bg-wc-navy text-wc-text">
       <header className="bg-wc-lime p-4 flex items-center gap-4 sticky top-0 z-50 text-wc-navy">
-        <Link href="/" className="p-2 rounded-full hover:bg-black/10 transition-colors">
+        <Link href="/" aria-label="Go back to Home" className="p-2 rounded-full hover:bg-black/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-wc-lime">
           <ArrowLeft size={24} />
         </Link>
         <div className="flex items-center gap-2">
@@ -67,7 +67,7 @@ export default function VolunteerApp() {
           </div>
 
           <div>
-            <label className="block text-sm font-semibold mb-2">What's happening?</label>
+            <label className="block text-sm font-semibold mb-2">What&apos;s happening?</label>
             <div className="relative">
               <textarea
                 value={observation}
@@ -75,7 +75,7 @@ export default function VolunteerApp() {
                 placeholder="E.g., Spill near the east restrooms causing a slip hazard..."
                 className="w-full bg-wc-navy border border-wc-surface-hover rounded-lg p-3 min-h-[120px] text-wc-text focus:outline-none focus:border-wc-lime resize-none"
               />
-              <button type="button" className="absolute bottom-3 right-3 p-2 rounded-full bg-wc-surface hover:text-wc-lime transition-colors">
+              <button type="button" aria-label="Use voice input" className="absolute bottom-3 right-3 p-2 rounded-full bg-wc-surface hover:text-wc-lime transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-wc-lime">
                 <Mic size={18} />
               </button>
             </div>

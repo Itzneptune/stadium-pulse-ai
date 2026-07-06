@@ -19,5 +19,5 @@ export interface SimulationState {
 
 export interface SimulationEvent {
   type: 'UPDATE' | 'INCIDENT_NEW' | 'INCIDENT_RESOLVED' | 'SURGE_TRIGGERED';
-  payload: any;
+  payload: unknown;
 }

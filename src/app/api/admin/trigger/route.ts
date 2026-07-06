@@ -7,15 +7,24 @@ export async function POST(request: NextRequest) {
     const { action, payload } = body;
 
     if (action === 'SURGE') {
-      simEngine.triggerSurge(payload.phase || 'HALFTIME');
+      const validPhases = ['PRE_MATCH', 'FIRST_HALF', 'HALFTIME', 'SECOND_HALF', 'POST_MATCH'];
+      const phase = payload?.phase || 'HALFTIME';
+      if (!validPhases.includes(phase)) {
+        return NextResponse.json({ error: 'Invalid phase' }, { status: 400 });
+      }
+      simEngine.triggerSurge(phase as 'HALFTIME' | 'PRE_MATCH' | 'POST_MATCH');
       return NextResponse.json({ success: true, message: `Surge triggered for phase ${payload.phase}` });
     } 
     
     if (action === 'INCIDENT') {
+      const description = payload?.description || 'System test incident';
+      if (typeof description !== 'string' || description.length > 500) {
+        return NextResponse.json({ error: 'Invalid description' }, { status: 400 });
+      }
       const incident = await simEngine.reportIncident(
-        payload.zoneId || 'gate-a',
-        payload.type || 'SECURITY',
-        payload.description || 'System test incident',
+        payload?.zoneId || 'gate-a',
+        payload?.type || 'SECURITY',
+        description,
         payload.role || 'SYSTEM'
       );
       return NextResponse.json({ success: true, incident });

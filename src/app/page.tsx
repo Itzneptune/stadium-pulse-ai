@@ -3,7 +3,7 @@ import { ArrowRight, Activity, ShieldCheck, Map } from 'lucide-react';
 
 export default function LandingPage() {
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center p-6 bg-wc-navy relative overflow-hidden">
+    <main className="min-h-screen flex flex-col items-center justify-center p-8 bg-wc-navy text-wc-text overflow-hidden relative">
       {/* Decorative BG */}
       <div className="absolute top-[-20%] left-[-10%] w-[50vw] h-[50vw] rounded-full bg-wc-magenta/20 blur-[120px] pointer-events-none" />
       <div className="absolute bottom-[-20%] right-[-10%] w-[50vw] h-[50vw] rounded-full bg-wc-cyan/20 blur-[120px] pointer-events-none" />
@@ -41,7 +41,7 @@ export default function LandingPage() {
           </div>
           <h2 className="text-2xl font-bold mb-2">Ops Command</h2>
           <p className="text-wc-text-muted flex-grow mb-6">
-            Live telemetry, AI incident triage, "what-if" simulations, and shift reports.
+            Live telemetry, AI incident triage, &quot;what-if&quot; simulations, and shift reports.
           </p>
           <div className="flex items-center text-wc-cyan font-semibold mt-auto">
             Enter Portal <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
@@ -55,7 +55,7 @@ export default function LandingPage() {
           </div>
           <h2 className="text-2xl font-bold mb-2">Volunteer Assist</h2>
           <p className="text-wc-text-muted flex-grow mb-6">
-            Simplified observation logging and task management for on-the-ground staff.
+            AI-powered predictive modeling for crowd control and emergency routing. Test &quot;What-If&quot; scenarios live.
           </p>
           <div className="flex items-center text-wc-lime font-semibold mt-auto">
             Enter Portal <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />

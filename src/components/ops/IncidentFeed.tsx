@@ -1,20 +1,11 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
-import { AlertCircle, CheckCircle2, Clock } from 'lucide-react';
+import React, { useEffect, useState, memo } from 'react';
+import { AlertCircle, CheckCircle2, Clock, ShieldAlert, Zap } from 'lucide-react';
 import { cn } from '../stadium/StadiumMap';
+import type { Incident } from '@/types';
 
-interface Incident {
-  id: string;
-  title: string;
-  priority: string;
-  status: string;
-  aiSummary: string;
-  aiActionPlan: string;
-  createdAt: string;
-}
-
-export function IncidentFeed() {
+export const IncidentFeed = memo(function IncidentFeed() {
   const [incidents, setIncidents] = useState<Incident[]>([]);
 
   const fetchIncidents = async () => {
@@ -50,7 +41,7 @@ export function IncidentFeed() {
   };
 
   return (
-    <div className="bg-wc-surface border border-wc-surface-hover rounded-2xl flex flex-col h-[600px] shadow-xl">
+    <div className="bg-wc-surface border border-wc-surface-hover rounded-2xl flex flex-col h-[600px] shadow-xl" aria-live="polite">
       <div className="p-4 border-b border-wc-surface-hover flex justify-between items-center bg-wc-navy rounded-t-2xl">
         <h2 className="font-bold text-lg flex items-center gap-2">
           <AlertCircle className="text-wc-magenta" size={20} />
@@ -94,4 +85,4 @@ export function IncidentFeed() {
       </div>
     </div>
   );
-}
+});

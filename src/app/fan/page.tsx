@@ -60,10 +60,10 @@ export default function FanApp() {
   }, []);
 
   return (
-    <div className="min-h-screen flex flex-col bg-wc-navy">
+    <main className="min-h-screen flex flex-col bg-wc-navy">
       {/* Header */}
       <header className="bg-wc-surface border-b border-wc-surface-hover p-4 flex items-center gap-4 sticky top-0 z-50">
-        <Link href="/" className="p-2 rounded-full hover:bg-wc-surface-hover transition-colors">
+        <Link href="/" aria-label="Go back to Home" className="p-2 rounded-full hover:bg-wc-surface-hover transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-wc-cyan">
           <ArrowLeft size={24} className="text-wc-text" />
         </Link>
         <h1 className="text-xl font-bold tracking-tight">Fan <span className="text-wc-magenta">Portal</span></h1>
@@ -95,7 +95,8 @@ export default function FanApp() {
           {/* Sustainability Tip */}
           <div className="bg-wc-surface border border-wc-lime/20 rounded-xl p-4 mt-auto">
             <h4 className="text-wc-lime font-bold text-sm mb-2 uppercase tracking-wider">Green Tip</h4>
-            <p className="text-sm text-wc-text-muted">Use the Metro Transit Hub to leave the stadium tonight—it cuts your trip's carbon footprint by 80% compared to rideshare.</p>
+            <p className="text-sm text-wc-text-muted">Use the Metro Transit Hub to leave the stadium tonight—it cuts your trip&apos;s carbon footprint by 80% compared to rideshare.</p>
+            <p className="text-xs text-wc-text-muted mt-2">Try: &quot;Where&apos;s the closest food to Gate B?&quot;</p>
           </div>
         </div>
 
@@ -111,6 +112,6 @@ export default function FanApp() {
           </div>
         </div>
       </main>
-    </div>
+    </main>
   );
 }

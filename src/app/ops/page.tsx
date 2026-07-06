@@ -3,10 +3,19 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, Activity, FileText, Loader2, Download } from 'lucide-react';
-import { StadiumMap, Density } from '@/components/stadium/StadiumMap';
-import { IncidentFeed } from '@/components/ops/IncidentFeed';
-import { WhatIfSimulator } from '@/components/ops/WhatIfSimulator';
 import ReactMarkdown from 'react-markdown';
+import dynamic from 'next/dynamic';
+import type { Density } from '@/components/stadium/StadiumMap';
+import { IncidentFeed } from '@/components/ops/IncidentFeed';
+
+const StadiumMap = dynamic(() => import('@/components/stadium/StadiumMap').then(mod => mod.StadiumMap), {
+  ssr: false,
+  loading: () => <div className="w-full aspect-square md:aspect-video bg-wc-surface rounded-2xl flex items-center justify-center animate-pulse"><Loader2 className="animate-spin text-wc-cyan" /></div>
+});
+
+const WhatIfSimulator = dynamic(() => import('@/components/ops/WhatIfSimulator').then(mod => mod.WhatIfSimulator), {
+  ssr: false,
+});
 
 export default function OpsCommandCenter() {
   const [densities, setDensities] = useState<Record<string, Density>>({});
@@ -49,7 +58,7 @@ export default function OpsCommandCenter() {
       {/* Header */}
       <header className="bg-wc-surface border-b border-wc-surface-hover p-4 flex items-center justify-between sticky top-0 z-50">
         <div className="flex items-center gap-4">
-          <Link href="/" className="p-2 rounded-full hover:bg-wc-surface-hover transition-colors">
+          <Link href="/" aria-label="Go back to Home" className="p-2 rounded-full hover:bg-wc-surface-hover transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-wc-cyan">
             <ArrowLeft size={24} />
           </Link>
           <div className="flex items-center gap-2">
@@ -95,7 +104,7 @@ export default function OpsCommandCenter() {
                 <FileText className="text-wc-cyan" size={20} />
                 Shift Handover Report
               </h2>
-              <button onClick={() => setReport(null)} className="text-wc-text-muted hover:text-white font-bold p-2">✕</button>
+              <button onClick={() => setReport(null)} aria-label="Close report" className="text-wc-text-muted hover:text-white font-bold p-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-wc-cyan">✕</button>
             </div>
             <div className="p-6 overflow-y-auto prose prose-invert prose-cyan max-w-none">
               <ReactMarkdown>{report}</ReactMarkdown>

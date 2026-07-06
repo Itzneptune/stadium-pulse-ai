@@ -3,6 +3,13 @@ import { Type } from '@google/genai';
 import prisma from '../db';
 import { simEngine } from '../simulation/engine';
 
+/**
+ * Analyzes a natural language incident description and uses Gemini's structured output
+ * to generate a strongly-typed triage response including priority and action plan.
+ * 
+ * @param {string} incidentDescription - The natural language description of the incident from a volunteer.
+ * @returns {Promise<any | null>} The parsed JSON triage object or null if it fails.
+ */
 export async function triageIncident(incidentDescription: string) {
   const prompt = `
 You are the Operations AI for StadiumPulse.
@@ -38,6 +45,12 @@ Analyze this and generate a structured triage object.
   }
 }
 
+/**
+ * Generates a comprehensive markdown Shift Handover Report by querying the last 50 incidents
+ * from the database and reading the live stadium state from the simulation engine.
+ * 
+ * @returns {Promise<string>} The generated markdown report or a fallback error string.
+ */
 export async function generateShiftReport() {
   const incidents = await prisma.incident.findMany({
     orderBy: { createdAt: 'desc' },
@@ -75,6 +88,13 @@ The report should be formatted in Markdown, with sections for:
   }
 }
 
+/**
+ * Simulates a hypothetical "What-If" scenario by passing the live stadium state 
+ * and the user's scenario to Gemini, returning a structured prediction of the outcome.
+ * 
+ * @param {string} scenarioQuery - The hypothetical scenario (e.g. "What if Gate A closes?").
+ * @returns {Promise<any | null>} A structured object containing a narrative and impacted zones, or null.
+ */
 export async function simulateWhatIf(scenarioQuery: string) {
   const state = simEngine.getState();
 

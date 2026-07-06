@@ -77,15 +77,17 @@ export function AskPulse({
         </div>
         <button 
           onClick={() => setAccessibilityMode(!accessibilityMode)}
-          className={cn("p-2 rounded-full transition-colors", accessibilityMode ? "bg-wc-cyan/20 text-wc-cyan" : "text-wc-text-muted hover:bg-wc-navy")}
+          className={cn("p-2 rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-wc-cyan", accessibilityMode ? "bg-wc-cyan/20 text-wc-cyan" : "text-wc-text-muted hover:bg-wc-navy")}
           title="Toggle Accessibility Routing"
+          aria-label={accessibilityMode ? "Disable Accessibility Routing" : "Enable Accessibility Routing"}
+          aria-pressed={accessibilityMode}
         >
           <Accessibility size={20} />
         </button>
       </div>
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+      <div className="flex-1 overflow-y-auto p-4 space-y-4" aria-live="polite">
         {messages.map(msg => (
           <div key={msg.id} className={cn("flex", msg.sender === 'USER' ? "justify-end" : "justify-start")}>
             <div className={cn(
@@ -117,12 +119,14 @@ export function AskPulse({
           value={input}
           onChange={e => setInput(e.target.value)}
           placeholder="E.g., Find food near Gate A..."
-          className="flex-1 bg-wc-navy border border-wc-surface rounded-full px-4 py-2 text-sm focus:outline-none focus:border-wc-cyan transition-colors"
+          aria-label="Ask Pulse a question"
+          className="flex-1 bg-wc-navy border border-wc-surface rounded-full px-4 py-2 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-wc-cyan transition-colors"
         />
         <button 
           type="submit" 
           disabled={!input.trim() || loading}
-          className="p-2 rounded-full bg-wc-cyan text-wc-navy disabled:opacity-50 disabled:cursor-not-allowed hover:bg-wc-cyan/80 transition-colors"
+          aria-label="Send message"
+          className="p-2 rounded-full bg-wc-cyan text-wc-navy disabled:opacity-50 disabled:cursor-not-allowed hover:bg-wc-cyan/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-wc-cyan transition-colors"
         >
           <Send size={18} />
         </button>
