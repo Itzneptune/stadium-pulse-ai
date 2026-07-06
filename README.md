@@ -44,41 +44,6 @@ A hyper-utilitarian, zero-friction interface for on-the-ground staff.
 
 ---
 
-## 🚀 Getting Started
-
-### Prerequisites
-* Node.js 18+
-* A Google Gemini API Key
-
-### Installation
-
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/your-username/stadium-pulse-ai.git
-   cd stadium-pulse-ai
-   ```
-
-2. **Install dependencies:**
-   ```bash
-   npm install
-   ```
-
-3. **Configure Environment Variables:**
-   Create a `.env` file in the root directory and add your Gemini API Key:
-   ```env
-   GEMINI_API_KEY=your_api_key_here
-   ```
-
-4. **Run the Development Server:**
-   ```bash
-   npm run dev
-   ```
-
-5. **Open the Application:**
-   Navigate to [http://localhost:3000](http://localhost:3000) in your browser.
-
----
-
 ## 🎨 UI/UX Philosophy
 
 The application is built with a premium, bespoke aesthetic that breaks out of the standard "dashboard in a box" feel:
