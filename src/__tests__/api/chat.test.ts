@@ -2,6 +2,7 @@ import { POST } from '../../app/api/chat/route';
 import { NextRequest } from 'next/server';
 import { globalRateLimiter } from '@/lib/rate-limit';
 import { askPulse } from '@/lib/gemini/wayfinding';
+import prisma from '@/lib/db';
 
 jest.mock('next/server', () => ({
   NextResponse: {
@@ -72,7 +73,6 @@ describe('POST /api/chat', () => {
     const req = createMockRequest({ query: 'Where is Gate B?', sessionId: 'session-123' });
     const res = await POST(req);
     expect(res.status).toBe(200);
-    const { default: prisma } = require('@/lib/db');
     expect(prisma.message.create).toHaveBeenCalledTimes(2);
   });
 

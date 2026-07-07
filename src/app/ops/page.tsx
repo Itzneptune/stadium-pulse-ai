@@ -20,7 +20,7 @@ const WhatIfSimulator = dynamic(() => import('@/components/ops/WhatIfSimulator')
 export default function OpsCommandCenter() {
   const [densities, setDensities] = useState<Record<string, Density>>({});
   const [report, setReport] = useState<string | null>(null);
-  const [reportLoading, setReportLoading] = useState(false);
+  const [generatingReport, setGeneratingReport] = useState(false);
 
   // SSE for Live State
   useEffect(() => {
@@ -52,35 +52,41 @@ export default function OpsCommandCenter() {
       console.error('Failed to generate report:', error);
       // Report generation failed silently
     } finally {
-      setReportLoading(false);
+      setGeneratingReport(false);
     }
   }, []);
 
   return (
-    <div className="min-h-screen flex flex-col bg-wc-navy text-wc-text" id="main-content">
+    <main id="main-content" className="min-h-screen flex flex-col bg-wc-navy text-wc-text">
       {/* Header */}
-      <header className="bg-wc-surface border-b border-wc-surface-hover p-4 flex items-center justify-between sticky top-0 z-50">
-        <div className="flex items-center gap-4">
-          <Link href="/" aria-label="Go back to Home" className="p-2 rounded-full hover:bg-wc-surface-hover transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-wc-cyan">
-            <ArrowLeft size={24} />
-          </Link>
-          <div className="flex items-center gap-2">
-            <Activity className="text-wc-cyan" size={24} />
-            <h1 className="text-xl font-bold tracking-tight">Ops Command <span className="text-wc-cyan">Center</span></h1>
+      <header className="bg-wc-cyan/10 border-b border-wc-cyan/20 p-4 sticky top-0 z-50">
+        <nav className="flex items-center justify-between" aria-label="Main Navigation">
+          <div className="flex items-center gap-4">
+            <Link href="/" aria-label="Go back to Home" className="p-2 rounded-full hover:bg-wc-cyan/20 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-wc-cyan text-wc-cyan">
+              <ArrowLeft size={24} />
+            </Link>
+            <div className="flex items-center gap-2">
+              <Activity className="text-wc-cyan" size={24} />
+              <h1 className="text-xl font-bold tracking-tight text-white">Ops Control</h1>
+            </div>
           </div>
-        </div>
-        <button 
-          onClick={handleGenerateReport}
-          disabled={reportLoading}
-          className="flex items-center gap-2 bg-wc-surface-hover hover:bg-wc-cyan/20 text-wc-cyan px-4 py-2 rounded-lg font-semibold transition-colors disabled:opacity-50"
-        >
-          {reportLoading ? <Loader2 className="animate-spin" size={18} /> : <FileText size={18} />}
-          Generate Shift Report
-        </button>
+          <div className="flex items-center gap-4 text-sm font-semibold">
+            <div className="px-3 py-1 rounded-full bg-wc-cyan/20 text-wc-cyan border border-wc-cyan/30">
+              {matchPhase.replace('_', ' ')}
+            </div>
+            <button 
+              onClick={handleGenerateReport}
+              disabled={generatingReport}
+              className="flex items-center gap-2 px-4 py-2 bg-wc-surface hover:bg-wc-surface-hover border border-wc-surface-hover rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-wc-cyan"
+            >
+              <FileText size={16} />
+              {generatingReport ? 'Generating...' : 'End Shift'}
+            </button>
+          </div>
+        </nav>
       </header>
 
-      {/* Main Grid */}
-      <main className="flex-1 p-4 md:p-6 lg:p-8 max-w-[1600px] mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-8">
+      <div className="flex-1 p-4 md:p-6 lg:p-8 max-w-[1600px] mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-8">
         
         {/* Left Col: Map & WhatIf */}
         <div className="lg:col-span-8 flex flex-col gap-8">
@@ -96,9 +102,9 @@ export default function OpsCommandCenter() {
         <div className="lg:col-span-4 flex flex-col">
           <IncidentFeed />
         </div>
-      </main>
+      </div>
 
-      {/* Report Modal */}
+      {/* Shift Report Dialog */}
       {report && (
         <div className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-label="Shift Handover Report">
           <div className="bg-wc-surface border border-wc-surface-hover rounded-2xl w-full max-w-3xl max-h-[85vh] flex flex-col shadow-2xl animate-in fade-in zoom-in-95">
@@ -130,6 +136,6 @@ export default function OpsCommandCenter() {
           </div>
         </div>
       )}
-    </div>
+    </main>
   );
 }

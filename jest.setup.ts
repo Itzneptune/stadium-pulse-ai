@@ -29,17 +29,20 @@ jest.mock('next/server', () => ({
     json: jest.fn().mockImplementation((body: unknown, init?: { status?: number }) => ({
       status: init?.status || 200,
       json: async () => body
-    }))
+    })),
+    next: jest.fn().mockReturnValue(undefined)
   },
   NextRequest: class NextRequest {
     body: string;
     headers: { get: (key: string) => string | null };
-    constructor(url: string, init: { body: string, headers?: Record<string, string> }) {
-      this.body = init.body;
+    nextUrl: { pathname: string };
+    constructor(url: string, init?: { body?: string, headers?: Record<string, string> }) {
+      this.body = init?.body || '';
       this.headers = {
-        get: (key: string) => init.headers?.[key] || null
+        get: (key: string) => init?.headers?.[key] || null
       };
+      this.nextUrl = { pathname: new URL(url).pathname };
     }
-    async json() { return JSON.parse(this.body); }
+    async json() { return JSON.parse(this.body || '{}'); }
   }
 }), { virtual: true });

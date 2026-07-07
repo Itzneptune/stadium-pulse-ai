@@ -24,26 +24,28 @@ export default function VolunteerApp() {
       setSuccess(true);
       setObservation('');
       setTimeout(() => setSuccess(false), 3000);
-    } catch (err) {
-      console.error(err);
+    } catch (error) {
+      console.error('Failed to submit report:', error);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-wc-navy text-wc-text">
-      <header className="bg-wc-lime p-4 flex items-center gap-4 sticky top-0 z-50 text-wc-navy">
-        <Link href="/" aria-label="Go back to Home" className="p-2 rounded-full hover:bg-black/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-wc-lime">
-          <ArrowLeft size={24} />
-        </Link>
-        <div className="flex items-center gap-2">
-          <ShieldCheck size={24} />
-          <h1 className="text-xl font-bold tracking-tight">Volunteer Assist</h1>
-        </div>
+    <main id="main-content" className="min-h-screen flex flex-col bg-wc-navy text-wc-text">
+      <header className="bg-wc-lime p-4 sticky top-0 z-50 text-wc-navy">
+        <nav className="flex items-center gap-4" aria-label="Main Navigation">
+          <Link href="/" aria-label="Go back to Home" className="p-2 rounded-full hover:bg-black/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-wc-lime">
+            <ArrowLeft size={24} />
+          </Link>
+          <div className="flex items-center gap-2">
+            <ShieldCheck size={24} />
+            <h1 className="text-xl font-bold tracking-tight">Volunteer Assist</h1>
+          </div>
+        </nav>
       </header>
 
-      <main className="flex-1 p-6 max-w-md mx-auto w-full flex flex-col gap-6">
+      <div className="flex-1 p-6 max-w-md mx-auto w-full flex flex-col gap-6">
         <div className="text-center mb-4">
           <h2 className="text-2xl font-bold">Report an Observation</h2>
           <p className="text-wc-text-muted mt-2 text-sm">
@@ -70,9 +72,11 @@ export default function VolunteerApp() {
 
           <div>
             <label htmlFor="observation-text" className="block text-sm font-semibold mb-2">What&apos;s happening?</label>
+            <p id="observation-help" className="sr-only">Describe the incident clearly.</p>
             <div className="relative">
               <textarea
                 id="observation-text"
+                aria-describedby="observation-help"
                 value={observation}
                 onChange={e => setObservation(e.target.value)}
                 placeholder="E.g., Spill near the east restrooms causing a slip hazard..."
@@ -103,7 +107,7 @@ export default function VolunteerApp() {
             <span className="font-semibold">Observation logged & triaged!</span>
           </div>
         )}
-      </main>
-    </div>
+      </div>
+    </main>
   );
 }

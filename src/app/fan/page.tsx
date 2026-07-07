@@ -61,19 +61,19 @@ export default function FanApp() {
   }, []);
 
   return (
-    <main className="min-h-screen flex flex-col bg-wc-navy" id="main-content">
-      {/* Header */}
-      <header className="bg-wc-surface border-b border-wc-surface-hover p-4 flex items-center gap-4 sticky top-0 z-50">
-        <Link href="/" aria-label="Go back to Home" className="p-2 rounded-full hover:bg-wc-surface-hover transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-wc-cyan">
-          <ArrowLeft size={24} className="text-wc-text" />
-        </Link>
-        <h1 className="text-xl font-bold tracking-tight">Fan <span className="text-wc-magenta">Portal</span></h1>
+    <main id="main-content" className="min-h-screen flex flex-col bg-wc-navy text-wc-text">
+      <header className="bg-wc-magenta text-white p-4 sticky top-0 z-50">
+        <nav className="flex items-center gap-4" aria-label="Main Navigation">
+          <Link href="/" aria-label="Go back to Home" className="p-2 rounded-full hover:bg-white/20 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white">
+            <ArrowLeft size={24} />
+          </Link>
+          <h1 className="text-xl font-bold tracking-tight">Fan Portal</h1>
+        </nav>
       </header>
 
-      {/* Main Content */}
-      <section className="flex-1 p-4 md:p-6 lg:p-8 max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-8">
+      <div className="flex-1 p-4 md:p-8 max-w-4xl mx-auto w-full flex flex-col gap-8">
         
-        {/* Left Col: Map & Alerts */}
+        {/* Advisory Banner */}
         <div className="lg:col-span-8 flex flex-col gap-6">
           
           {/* Live Advisory Banner */}
@@ -111,7 +111,7 @@ export default function FanApp() {
             />
           </div>
         </div>
-      </section>
+      </div>
     </main>
   );
 }

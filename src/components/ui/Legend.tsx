@@ -1,6 +1,6 @@
 import React from 'react';
 import { CATEGORY_COLORS, Category, Severity, getSeverityStyles, getSeverityFill } from '@/lib/design/tokens';
-import { cn } from '../stadium/StadiumMap';
+import { cn } from '@/lib/utils';
 
 export function Legend() {
   const categories: Category[] = [

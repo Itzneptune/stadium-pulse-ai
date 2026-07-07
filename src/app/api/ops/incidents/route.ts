@@ -16,6 +16,8 @@ export async function GET() {
         priority: true,
         zoneId: true,
         createdAt: true,
+        aiSummary: true,
+        aiActionPlan: true,
       }
     });
     return NextResponse.json(incidents, {

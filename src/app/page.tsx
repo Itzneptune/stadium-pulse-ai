@@ -3,7 +3,7 @@ import { ArrowRight, Activity, ShieldCheck, Map } from 'lucide-react';
 
 export default function LandingPage() {
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center p-8 bg-wc-navy text-wc-text overflow-hidden relative">
+    <main id="main-content" className="min-h-screen flex flex-col items-center justify-center p-8 bg-wc-navy text-wc-text overflow-hidden relative">
       {/* Decorative BG */}
       <div className="absolute top-[-20%] left-[-10%] w-[50vw] h-[50vw] rounded-full bg-wc-magenta/20 blur-[120px] pointer-events-none" />
       <div className="absolute bottom-[-20%] right-[-10%] w-[50vw] h-[50vw] rounded-full bg-wc-cyan/20 blur-[120px] pointer-events-none" />

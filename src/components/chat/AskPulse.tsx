@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { Send, Bot, Accessibility } from 'lucide-react';
-import { cn } from '../stadium/StadiumMap';
+import { cn } from '@/lib/utils';
 
 interface Message {
   id: string;

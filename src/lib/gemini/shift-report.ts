@@ -1,6 +1,7 @@
 import { ai, DEFAULT_MODEL } from './client';
 import prisma from '../db';
 import { simEngine } from '../simulation/engine';
+import { logger } from '../utils';
 
 /**
  * Generates a comprehensive markdown Shift Handover Report by querying the last 50 incidents
@@ -8,7 +9,7 @@ import { simEngine } from '../simulation/engine';
  * 
  * @returns {Promise<string>} The generated markdown report or a fallback error string.
  */
-export async function generateShiftReport() {
+export async function generateShiftReport(): Promise<string> {
   const incidents = await prisma.incident.findMany({
     orderBy: { createdAt: 'desc' },
     take: 50
@@ -40,7 +41,7 @@ The report should be formatted in Markdown, with sections for:
     });
     return response.text || "Report generation failed.";
   } catch (error) {
-    console.error("Gemini API Error in generateShiftReport:", error);
+    logger.error("Gemini API Error in generateShiftReport:", error);
     return "Error generating shift report. Please try again.";
   }
 }

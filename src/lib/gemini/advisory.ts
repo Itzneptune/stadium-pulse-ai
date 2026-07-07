@@ -1,8 +1,23 @@
 import { ai, DEFAULT_MODEL } from './client';
 import { Type } from '@google/genai';
 import { simEngine } from '../simulation/engine';
+import { logger } from '../utils';
 
-export async function generateCrowdAdvisories() {
+export interface AdvisoryResult {
+  fanAdvisory: string;
+  staffAlerts: {
+    zoneId: string;
+    severity: string;
+    message: string;
+    suggestedAction: string;
+  }[];
+}
+
+/**
+ * Generates crowd advisories and staff alerts based on the current stadium state.
+ * @returns {Promise<AdvisoryResult | null>} The parsed advisories or null if failed.
+ */
+export async function generateCrowdAdvisories(): Promise<AdvisoryResult | null> {
   const currentState = simEngine.getState();
   
   const prompt = `
@@ -53,7 +68,7 @@ Match Phase: ${currentState.matchPhase}
     }
     return null;
   } catch (error) {
-    console.error("Gemini API Error in generateCrowdAdvisories:", error);
+    logger.error("Gemini API Error in generateCrowdAdvisories:", error);
     return null;
   }
 }

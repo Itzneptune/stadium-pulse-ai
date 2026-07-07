@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState, memo } from 'react';
 import { AlertCircle, CheckCircle2 } from 'lucide-react';
-import { cn } from '../stadium/StadiumMap';
+import { cn } from '@/lib/utils';
 import type { Incident } from '@/types';
 
 export const IncidentFeed = memo(function IncidentFeed() {

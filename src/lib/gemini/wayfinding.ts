@@ -1,8 +1,21 @@
 import { ai, DEFAULT_MODEL } from './client';
 import { Type } from '@google/genai';
 import { simEngine } from '../simulation/engine';
+import { logger } from '../utils';
 
-export async function askPulse(query: string, language: string = 'en', accessibilityMode: boolean = false) {
+export interface WayfindingResult {
+  message: string;
+  route: string[];
+}
+
+/**
+ * Provides a conversational route and wayfinding instructions based on the stadium state.
+ * @param query - The user's query.
+ * @param language - The preferred language.
+ * @param accessibilityMode - Whether to prioritize accessible routes.
+ * @returns {Promise<WayfindingResult>} The wayfinding response.
+ */
+export async function askPulse(query: string, language: string = 'en', accessibilityMode: boolean = false): Promise<WayfindingResult> {
   const currentState = simEngine.getState();
   
   const prompt = `
@@ -53,7 +66,7 @@ Instructions:
     }
     return { message: "Sorry, I couldn't process that request right now.", route: [] };
   } catch (error) {
-    console.error("Gemini API Error in askPulse:", error);
+    logger.error("Gemini API Error in askPulse:", error);
     return { message: "System is offline. Please try again later.", route: [] };
   }
 }

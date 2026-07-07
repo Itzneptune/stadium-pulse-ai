@@ -1,15 +1,21 @@
 import { ai, DEFAULT_MODEL } from './client';
 import { Type } from '@google/genai';
 import { simEngine } from '../simulation/engine';
+import { logger } from '../utils';
+
+export interface WhatIfResult {
+  narrative: string;
+  impactedZones: string[];
+}
 
 /**
  * Simulates a hypothetical "What-If" scenario by passing the live stadium state 
  * and the user's scenario to Gemini, returning a structured prediction of the outcome.
  * 
  * @param {string} scenarioQuery - The hypothetical scenario (e.g. "What if Gate A closes?").
- * @returns {Promise<any | null>} A structured object containing a narrative and impacted zones, or null.
+ * @returns {Promise<WhatIfResult | null>} A structured object containing a narrative and impacted zones, or null.
  */
-export async function simulateWhatIf(scenarioQuery: string) {
+export async function simulateWhatIf(scenarioQuery: string): Promise<WhatIfResult | null> {
   const state = simEngine.getState();
 
   const prompt = `
@@ -46,7 +52,7 @@ Analyze the scenario and predict what would happen. Provide a plausible projecte
     if (response.text) return JSON.parse(response.text);
     return null;
   } catch (error) {
-    console.error("Gemini API Error in simulateWhatIf:", error);
+    logger.error("Gemini API Error in simulateWhatIf:", error);
     return null;
   }
 }
